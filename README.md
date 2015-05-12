@@ -1,6 +1,4 @@
-<snippet>
-  <content><![CDATA[
-# ${1:Project Name}
+# Battleships
 
 TODO: Implement the Battleships game using Raw OO PHP
 
@@ -11,7 +9,3 @@ TODO: Make sure you have Lamp stack environment
 ## Usage
 
 TODO: Plug and play
-
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
