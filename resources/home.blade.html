@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="{{ app()->getLocale() }}">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Battleship Game - By Joao Soares</title>
+
+		<!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
+
+        <!-- Styles -->
+        <style>
+            html, body {
+                background-color: #fff;
+                color: #636b6f;
+                font-family: 'Nunito', sans-serif;
+                font-weight: 200;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .full-height {
+                height: 100vh;
+            }
+
+            .flex-center {
+                align-items: center;
+                display: flex;
+                justify-content: center;
+            }
+
+            .position-ref {
+                position: relative;
+            }
+
+            .top-right {
+                position: absolute;
+                right: 10px;
+                top: 18px;
+            }
+
+            .content {
+                text-align: center;
+            }
+
+            .title {
+                font-size: 84px;
+            }
+
+            .links > a {
+                color: #636b6f;
+                padding: 0 25px;
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .m-b-md {
+                margin-bottom: 30px;
+            }
+        </style>
+	</head>
+	<body>
+        <div class="flex-center position-ref full-height">
+
+            <div class="content">
+                <div class="title m-b-md">
+                    Battleship Game
+                </div>
+
+                <div class="links">
+                    <a href="https://laravel.com/docs">Documentation</a>
+                    <a href="https://laracasts.com">Laracasts</a>
+                    <a href="https://laravel-news.com">News</a>
+                    <a href="https://nova.laravel.com">Nova</a>
+                    <a href="https://forge.laravel.com">Forge</a>
+                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+	<body>
+		<div class="wrapper">
+			<h1></h1>
+			<?php
+				$project_dir = realpath( dirname(__FILE__) );
+				require_once $project_dir . '/loader.php';
+				$game = new Game();
+				$view = new GameHandler($game);
+				
+				$view->startGame();				
+				$serialiazed_game = base64_encode(serialize($game));
+				
+				/* Uncomment this if you want to see where the vessels are. YOU CHEATER! */
+				//echo $view->displaySolution();
+			?>
+			<div class="battleships-wrapper">
+				<?php echo $view->output(false); ?>
+			</div>
+			<form name="input" action="" method="post" id="battleships_form">
+				<input type="hidden" id="game_serialiazed" name="game_serialiazed" value="<?php echo $serialiazed_game; ?>" />				
+				Enter coordinates (row, col), e.g. A5 <input type="input" size="3" style="width: 60px" name="coord" id="coord" autofocus>
+				<input type="submit" />
+			</form>
+			<div class="footer">Joao Soares &copy; <?php echo date("Y"); ?></div>
+		</div>
+		
+		<script type="text/javascript">
+			$(function() {
+				$("#battleships_form").submit(function( event ) {
+				  	event.preventDefault();
+				  	$("#invalid_play").html();
+				  	if ($("#coord").val() == "") {
+						$("#invalid_play").html("Invalid play!");	  	
+				  	} else {
+				  		$.post( "ajax_game_interaction.php", {game:$("#game_serialiazed").val(), nextCommand:$("#coord").val()}, function( result ) {
+				  			data = $.parseJSON(result);
+							$( ".battleships-wrapper" ).html( data.game );
+							$("#game_serialiazed").val( data.serialiazed );
+						});
+				  	}
+				  	return false;
+				});
+			});
+		</script>
+	</body>
+</html>
