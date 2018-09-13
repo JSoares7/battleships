@@ -12,3 +12,9 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
+
+# Custom rules
+.vagrant
+.DS_Store
+.php_cs.cache
+npm-debug.log
